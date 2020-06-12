@@ -1,0 +1,13 @@
+.main {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  border-left: 1px solid #ccc;
+}
+.main .input {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 250px;
+  border-top: 2px solid sandybrown;
+}
