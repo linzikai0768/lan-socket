@@ -6,30 +6,37 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import TextField from '@material-ui/core/TextField'
 import Snackbar from '@material-ui/core/Snackbar'
-import { changeName } from '../api/axios'
+import { addChannel } from '../api/axios'
 import userCode from '../utils/userCode'
-class ChangeNameDialog extends React.Component {
+class AddChannel extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      userName: '',
+      channelName: '',
       open: false,
       message: ''
     }
   }
-  fnChangeName = () => {
-    let userName = this.state.userName.trim()
-    if (userName) {
-      changeName({ userCode, userName }).then(res => {
-        if (res.data === '修改成功') {
-          this.handleClose(true, res.data)
-          this.props.isOpenDialog(false)
-          this.props.getUserList()
-        } else this.handleClose(true, res.data)
+  fnAddChange = () => {
+    let channelName = this.state.channelName.trim()
+    if (channelName) {
+      addChannel({ creator: userCode, channelName }).then(res => {
+        if (res.data.code === 200) {
+          this.handleClose(true, res.data.msg)
+          this.props.getChannelList()
+          this.props.openDialog(false)
+          this.props.changeChannel(this.props.channelList.length)
+        } else {
+          this.handleClose(true, res.data.msg)
+        }
       })
-    } else this.handleClose(true, '昵称不能为空')
+    } else this.handleClose(true, '群名称不能为空')
   }
-  fnChange = e => this.setState({ userName: e.target.value })
+  fnChange = e => {
+    this.setState({
+      channelName: e.target.value
+    })
+  }
   handleClose = (open, message) => this.setState({ open, message })
   render () {
     return (
@@ -45,32 +52,31 @@ class ChangeNameDialog extends React.Component {
         />
         <Dialog
           open={this.props.dialog}
+          onClose={() => this.props.openDialog(false)}
           aria-labelledby='alert-dialog-title'
           aria-describedby='alert-dialog-description'
         >
           <form autocomplete='off'>
-            <DialogTitle id='alert-dialog-title'>{'修改昵称'}</DialogTitle>
+            <DialogTitle id='alert-dialog-title'>{'创建群'}</DialogTitle>
             <DialogContent>
               <TextField
                 id='standard-basic'
-                label='userName'
+                label='channelName'
                 className='inputName'
                 onChange={this.fnChange}
-                value={this.state.userName}
+                value={this.state.channelName}
                 severity='success'
               />
             </DialogContent>
             <DialogActions>
-              {!this.props.coercive && (
-                <Button
-                  color='primary'
-                  onClick={() => this.props.isOpenDialog(false)}
-                >
-                  取消
-                </Button>
-              )}
-              <Button color='primary' autoFocus onClick={this.fnChangeName}>
-                确认
+              <Button
+                color='primary'
+                onClick={() => this.props.openDialog(false)}
+              >
+                取消
+              </Button>
+              <Button color='primary' autoFocus onClick={this.fnAddChange}>
+                创建
               </Button>
             </DialogActions>
           </form>
@@ -79,4 +85,4 @@ class ChangeNameDialog extends React.Component {
     )
   }
 }
-export default ChangeNameDialog
+export default AddChannel

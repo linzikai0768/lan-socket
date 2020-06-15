@@ -3,38 +3,38 @@ import './assets/css/App.css'
 import Header from './pages/header/header'
 import Main from './pages/main/main'
 import Aside from './pages/aside/aside'
-import io from 'socket.io-client'
 import userCode from './utils/userCode'
 import ChangeName from './components/changeName'
 import { getUserForm, getChannelList, getAllMessage } from './api/axios'
+import { connect } from 'react-redux'
+import socket from './utils/socket'
 class App extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       dialog: false,
-      userList: [],
-      channelList: [],
-      channelId: 0
+      coercive: false
     }
   }
+
   componentDidMount () {
-    const socket = io('http://localhost:3030')
     socket.emit('userAccess', JSON.stringify({ userCode }))
-    socket.on('informUserAccess', data => {
+    socket.emit('informUserAccess', data => {
       console.log(data)
     })
     socket.on('changeName', data => {
-      console.log(data)
+      this.isOpenDialog(true, true)
+      this.getChannelList()
     })
     this.getUserList()
     this.getChannelList()
   }
   getUserList = () => {
     getUserForm().then(res => {
-      this.setState({ userList: res.data })
+      this.props.saveUserList(res.data)
       res.data.find(item => {
         if (item.userCode === userCode) {
-          if (!item.userName) this.setState({ dialog: true })
+          if (!item.userName) this.isOpenDialog(true, true)
         }
         return item.userCode === userCode
       })
@@ -42,39 +42,68 @@ class App extends React.Component {
   }
   getChannelList = () => {
     getChannelList({ userCode }).then(res => {
+      if (!res.data.length) return
       let channeIds = []
       let channelList = res.data.map(item => {
         channeIds.push(item.channelId)
-        item.member = JSON.parse(item.member)
+        item.member = item.member.split(',')
         return item
       })
-      this.setState({ channelList })
+      this.props.saveChannelList(channelList)
       this.getAllMessage(channeIds)
     })
   }
+  // 获取所有群信息
   getAllMessage = ids => {
-    getAllMessage({ ids }).then(res => {
-      console.log(res)
-    })
+    getAllMessage({ ids }).then(res => this.props.saveMessageList(res.data))
   }
-  isOpenDialog = state => {
-    this.setState({
-      dialog: state
-    })
-  }
+  isOpenDialog = (dialog, coercive) => this.setState({ dialog, coercive })
   render () {
-    let { channelList, dialog, channelId } = this.state
+    let { dialog, coercive } = this.state
+    let { channelList } = this.props
     return (
       <div className='App'>
-        <Header openDialog={this.isOpenDialog}></Header>
+        <Header isOpenDialog={this.isOpenDialog}></Header>
         <div className='middle'>
-          <Aside channelList={channelList} channelId={channelId}></Aside>
+          <Aside
+            channelList={channelList}
+            getChannelList={this.getChannelList}
+          ></Aside>
           <Main></Main>
         </div>
-        <ChangeName dialog={dialog} openDialog={this.isOpenDialog}></ChangeName>
+        <ChangeName
+          dialog={dialog}
+          isOpenDialog={this.isOpenDialog}
+          coercive={coercive}
+          getUserList={this.getUserList}
+        ></ChangeName>
       </div>
     )
   }
 }
-
-export default App
+const mapStateToProps = state => {
+  return { ...state }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    saveUserList (data) {
+      dispatch({
+        type: 'save_userList',
+        value: data
+      })
+    },
+    saveChannelList (data) {
+      dispatch({
+        type: 'save_channelList',
+        value: data
+      })
+    },
+    saveMessageList (data) {
+      dispatch({
+        type: 'save_messageList',
+        value: data
+      })
+    }
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(App)

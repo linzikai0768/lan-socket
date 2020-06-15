@@ -5,6 +5,11 @@
 .App {
   position: fixed;
   width: 100%;
+  max-width: 1650px;
+  left: 50%;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  transform: translateX(-50%);
   top: 0;
   bottom: 0;
 }
