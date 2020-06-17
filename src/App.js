@@ -8,6 +8,7 @@ import ChangeName from './components/changeName'
 import { getUserForm, getChannelList, getAllMessage } from './api/axios'
 import { connect } from 'react-redux'
 import socket from './utils/socket'
+
 class App extends React.Component {
   constructor (props) {
     super(props)
@@ -16,7 +17,6 @@ class App extends React.Component {
       coercive: false
     }
   }
-
   componentDidMount () {
     socket.emit('userAccess', JSON.stringify({ userCode }))
     socket.emit('informUserAccess', data => {
@@ -64,11 +64,8 @@ class App extends React.Component {
     return (
       <div className='App'>
         <Header isOpenDialog={this.isOpenDialog}></Header>
-        <div className='middle'>
-          <Aside
-            channelList={channelList}
-            getChannelList={this.getChannelList}
-          ></Aside>
+        <div className={this.props.show ? 'middle show' : 'middle'}>
+          <Aside channelList={channelList}></Aside>
           <Main></Main>
         </div>
         <ChangeName

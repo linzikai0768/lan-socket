@@ -2,13 +2,61 @@
   flex: 1;
   height: 100%;
   position: relative;
-  border-left: 1px solid #ccc;
   display: flex;
   flex-direction: column-reverse;
 }
 .main .message-list {
   flex: 1;
   overflow: auto;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.main .message-list .content {
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.main .message-list .content .userImg {
+  float: left;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 14px;
+  text-align: center;
+  background-color: antiquewhite;
+  border-radius: 50%;
+}
+.main .message-list .content .primary {
+  float: left;
+  margin: 0 15px;
+  max-width: 70%;
+}
+.main .message-list .content .primary .time {
+  font-size: 12px;
+  color: #ccc;
+  margin-top: 8px;
+}
+.main .message-list .content .primary .text {
+  display: inline-block;
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow: hidden;
+  margin-top: 5px;
+  padding: 10px;
+  background-color: #94ecec;
+  border-radius: 5px;
+}
+.main .message-list .oneself .userImg {
+  float: right;
+}
+.main .message-list .oneself .primary {
+  float: right;
+  text-align: right;
+}
+.main .message-list .oneself .primary .time {
+  text-align: right;
+}
+.main .message-list .oneself .primary .text {
+  text-align: left;
 }
 .main .input {
   bottom: 0;

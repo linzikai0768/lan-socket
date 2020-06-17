@@ -4,7 +4,8 @@ const defaultState = {
   messageList: [],
   userList: [],
   channelList: [],
-  channelId: 0
+  channelId: 0,
+  show: false
 }
 // state参数起始存放的是原始数据
 // action参数是由store传递进来的数据变更，它其实是一个对象
@@ -36,6 +37,17 @@ let reducer = (state = defaultState, action) => {
   if (action.type === 'add_message') {
     const oNewState = JSON.parse(JSON.stringify(state))
     oNewState.messageList.push(action.value)
+    return oNewState
+  }
+  if (action.type === 'addJoin_channel') {
+    const oNewState = JSON.parse(JSON.stringify(state))
+    oNewState.channelList.push(action.value)
+    oNewState.channelId = action.index
+    return oNewState
+  }
+  if (action.type === 'change_show') {
+    const oNewState = JSON.parse(JSON.stringify(state))
+    oNewState.show = !state.show
     return oNewState
   }
   return state

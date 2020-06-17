@@ -6,8 +6,9 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import TextField from '@material-ui/core/TextField'
 import Snackbar from '@material-ui/core/Snackbar'
-import { addChannel } from '../api/axios'
+import { addChannel, joinChannel } from '../api/axios'
 import userCode from '../utils/userCode'
+import { connect } from 'react-redux'
 class AddChannel extends React.Component {
   constructor (props) {
     super(props)
@@ -17,24 +18,42 @@ class AddChannel extends React.Component {
       message: ''
     }
   }
-  fnAddChange = () => {
+  fnChange = e => this.setState({ channelName: e.target.value })
+  fnExecute = () => {
     let channelName = this.state.channelName.trim()
     if (channelName) {
-      addChannel({ creator: userCode, channelName }).then(res => {
-        if (res.data.code === 200) {
-          this.handleClose(true, res.data.msg)
-          this.props.getChannelList()
-          this.props.openDialog(false)
-          this.props.changeChannel(this.props.channelList.length)
-        } else {
-          this.handleClose(true, res.data.msg)
-        }
-      })
+      if (this.props.isAdd) {
+        this.fnAddChange(channelName)
+      } else {
+        this.fnJoinChannel(channelName)
+      }
     } else this.handleClose(true, '群名称不能为空')
   }
-  fnChange = e => {
-    this.setState({
-      channelName: e.target.value
+  fnAddChange = channelName => {
+    addChannel({ creator: userCode, channelName }).then(res => {
+      if (res.data.code === 200) {
+        this.handleClose(true, res.data.msg)
+        this.props.openDialog(false)
+        this.props.addJoinChannel(
+          {
+            creator: userCode,
+            channelName,
+            channelId: res.data.channelId
+          },
+          this.props.channelList.length
+        )
+      } else this.handleClose(true, res.data.msg)
+    })
+  }
+  fnJoinChannel = channelName => {
+    joinChannel({ userCode, channelName }).then(res => {
+      if (res.data.code === 200) {
+        this.handleClose(true, res.data.msg)
+        this.props.openDialog(false)
+        this.props.addJoinChannel(res.data.data, this.props.channelList.length)
+      } else {
+        this.handleClose(true, res.data.msg)
+      }
     })
   }
   handleClose = (open, message) => this.setState({ open, message })
@@ -57,7 +76,9 @@ class AddChannel extends React.Component {
           aria-describedby='alert-dialog-description'
         >
           <form autocomplete='off'>
-            <DialogTitle id='alert-dialog-title'>{'创建群'}</DialogTitle>
+            <DialogTitle id='alert-dialog-title'>
+              {this.props.isAdd ? '创建群' : '加入群'}
+            </DialogTitle>
             <DialogContent>
               <TextField
                 id='standard-basic'
@@ -75,8 +96,8 @@ class AddChannel extends React.Component {
               >
                 取消
               </Button>
-              <Button color='primary' autoFocus onClick={this.fnAddChange}>
-                创建
+              <Button color='primary' autoFocus onClick={this.fnExecute}>
+                {this.props.isAdd ? '创建' : '加入'}
               </Button>
             </DialogActions>
           </form>
@@ -85,4 +106,18 @@ class AddChannel extends React.Component {
     )
   }
 }
-export default AddChannel
+const mapStateToProps = state => {
+  return { ...state }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    addJoinChannel (data, index) {
+      dispatch({
+        type: 'addJoin_channel',
+        value: data,
+        index
+      })
+    }
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(AddChannel)

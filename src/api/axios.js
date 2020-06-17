@@ -44,3 +44,18 @@ export function addChannel (data) {
     data: Qs.stringify(data)
   })
 }
+// 加入群
+export function joinChannel (data) {
+  return instance({
+    url: '/joinChannel',
+    method: 'post',
+    data: Qs.stringify(data)
+  })
+}
+export function getData () {
+  return instance({
+    url: '/getData',
+    method: 'post',
+    data: { key: 123 }
+  })
+}

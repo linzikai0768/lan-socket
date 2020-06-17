@@ -10,13 +10,18 @@ class Header extends React.Component {
       open: false
     }
   }
-
+  fnShow = () => {
+    if (window.innerWidth > 560) return
+    this.props.changeShow()
+  }
   handleClick = open => this.setState({ open })
   render () {
     let { userName } = this.props
     return (
       <div className='header'>
-        <div>Logo</div>
+        <div className='logo' onClick={this.fnShow}>
+          Logo
+        </div>
         <div className='rigth'>
           <div onClick={() => this.handleClick(true)}> {userName} </div>
           <Menu
@@ -37,4 +42,11 @@ class Header extends React.Component {
 const mapStateToProps = state => {
   return { ...state }
 }
-export default connect(mapStateToProps)(Header)
+const mapDispatchToProps = dispatch => {
+  return {
+    changeShow (data) {
+      dispatch({ type: 'change_show' })
+    }
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Header)

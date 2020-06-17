@@ -5,13 +5,24 @@
 .App {
   position: fixed;
   width: 100%;
-  max-width: 1650px;
   left: 50%;
+  transform: translateX(-50%);
   border-left: 1px solid #ccc;
   border-right: 1px solid #ccc;
-  transform: translateX(-50%);
+  max-width: 1200px;
   top: 0;
   bottom: 0;
+}
+.logo::after {
+  opacity: 0;
+  transition: all 1s;
+  content: '更多';
+  border: 1px solid #0094ff;
+  background-color: #fff;
+  padding: 5px 8px;
+  position: absolute;
+  top: 8px;
+  left: 15px;
 }
 .middle {
   box-sizing: border-box;
@@ -25,4 +36,19 @@
 }
 .Snackbar {
   z-index: 9999999 !important;
+}
+@media screen and (max-width: 560px) {
+  body .aside {
+    transform: translateX(-100%);
+    position: fixed;
+  }
+  body .show .aside {
+    transform: translateX(0%);
+  }
+  body .logo::after {
+    opacity: 1;
+  }
+  body .inputName {
+    width: 200px;
+  }
 }

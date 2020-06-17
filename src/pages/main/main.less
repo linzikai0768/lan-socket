@@ -2,12 +2,63 @@
   flex: 1;
   height: 100%;
   position: relative;
-  border-left: 1px solid #ccc;
   display: flex;
   flex-direction: column-reverse;
   .message-list {
     flex: 1;
     overflow: auto;
+    padding: 10px;
+    box-sizing: border-box;
+    .content {
+      overflow: hidden;
+      margin-bottom: 10px;
+      // width: 100%;
+      .userImg {
+        float: left;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        font-size: 14px;
+        text-align: center;
+        background-color: antiquewhite;
+        border-radius: 50%;
+      }
+      .primary {
+        float: left;
+        margin: 0 15px;
+        max-width: 70%;
+        .time {
+          font-size: 12px;
+          color: #ccc;
+          margin-top: 8px;
+        }
+        .text {
+          display: inline-block;
+          max-width: 100%;
+          word-wrap: break-word;
+          overflow: hidden;
+          margin-top: 5px;
+          padding: 10px;
+          background-color: rgb(148, 236, 236);
+          border-radius: 5px;
+        }
+      }
+    }
+    .oneself {
+      .userImg {
+        float: right;
+      }
+      .primary {
+        float: right;
+        text-align: right;
+        .time {
+          text-align: right;
+        }
+        .text {
+          text-align: left;
+        }
+      }
+    }
   }
   .input {
     bottom: 0;

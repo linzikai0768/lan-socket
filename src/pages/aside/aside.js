@@ -7,18 +7,21 @@ import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 import AddChannel from '../../components/addChannel'
 import { connect } from 'react-redux'
+
 class Aside extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      dialog: false
+      dialog: false,
+      isAdd: true
     }
   }
   changeChannel = i => {
     if (i === this.props.channelId) return
     this.props.changeChannel(i)
   }
-  openDialog = dialog => this.setState({ dialog })
+  openDialog = (dialog, isAdd) => this.setState({ dialog, isAdd })
+
   render () {
     let { channelList, channelId } = this.props
     return (
@@ -28,11 +31,16 @@ class Aside extends React.Component {
             variant='contained'
             color='primary'
             href='#contained-buttons'
-            onClick={() => this.openDialog(true)}
+            onClick={() => this.openDialog(true, true)}
           >
             创建群
           </Button>
-          <Button variant='contained' color='primary' href='#contained-buttons'>
+          <Button
+            variant='contained'
+            color='primary'
+            href='#contained-buttons'
+            onClick={() => this.openDialog(true, false)}
+          >
             加入群
           </Button>
         </div>
@@ -55,9 +63,8 @@ class Aside extends React.Component {
         <AddChannel
           dialog={this.state.dialog}
           openDialog={this.openDialog}
-          getChannelList={this.props.getChannelList}
           changeChannel={this.changeChannel}
-          channelList={this.props.channelList}
+          isAdd={this.state.isAdd}
         ></AddChannel>
       </div>
     )
