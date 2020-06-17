@@ -12,7 +12,6 @@
     .content {
       overflow: hidden;
       margin-bottom: 10px;
-      // width: 100%;
       .userImg {
         float: left;
         width: 50px;
@@ -41,6 +40,9 @@
           padding: 10px;
           background-color: rgb(148, 236, 236);
           border-radius: 5px;
+          img {
+            max-width: 100%;
+          }
         }
       }
     }
@@ -67,8 +69,8 @@
     border-top: 2px solid sandybrown;
     .message {
       width: 100%;
-      margin-top: 30px;
-      height: 170px;
+      margin-top: 40px;
+      height: 160px;
       .MuiOutlinedInput-multiline {
         height: 100%;
       }
@@ -77,6 +79,43 @@
       position: absolute;
       bottom: 20px;
       right: 20px;
+    }
+    .file {
+      height: 40px;
+      width: 100%;
+      position: absolute;
+      bottom: 160px;
+      left: 0;
+      display: flex;
+      align-items: center;
+      flex-direction: row-reverse;
+      .img {
+        width: 30px;
+        height: 30px;
+        overflow: hidden;
+        margin: 0 20px;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+        position: relative;
+        input {
+          width: 100%;
+          height: 100%;
+          opacity: 0;
+        }
+      }
+      .img::after {
+        content: '+';
+        height: 30px;
+        line-height: 25px;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 30px;
+        font-style: normal;
+        color: #ccc;
+        z-index: -1;
+      }
     }
   }
 }

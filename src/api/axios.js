@@ -15,7 +15,7 @@ export function changeName (data) {
   return instance({
     url: '/change/userName',
     method: 'post',
-    data: data
+    data
   })
 }
 
@@ -24,7 +24,7 @@ export function getChannelList (data) {
   return instance({
     url: '/acquire/channel',
     method: 'post',
-    data: data
+    data
   })
 }
 // 获取所在群的所有信息
@@ -32,7 +32,7 @@ export function getAllMessage (data) {
   return instance({
     url: '/acquire/allMessage',
     method: 'post',
-    data: data
+    data
   })
 }
 // 创建群
@@ -40,7 +40,7 @@ export function addChannel (data) {
   return instance({
     url: '/addChannel',
     method: 'post',
-    data: data
+    data
   })
 }
 // 加入群
@@ -48,6 +48,15 @@ export function joinChannel (data) {
   return instance({
     url: '/joinChannel',
     method: 'post',
-    data: data
+    data
+  })
+}
+// 上传图片消息
+export function sendImgMessage (data) {
+  return instance({
+    url: '/send/imgMessage',
+    method: 'post',
+    data,
+    responseType: 'text'
   })
 }

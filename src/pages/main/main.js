@@ -6,16 +6,34 @@ import userCode from '../../utils/userCode'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import dayjs from 'dayjs'
-
+import href from '../../utils/href'
+import { sendImgMessage } from '../../api/axios'
 class Main extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       message: ''
     }
+    this.myFile = React.createRef()
+    this.myDiv = React.createRef()
   }
   componentDidMount () {
-    socket.on('sendMessage', data => this.props.addMessage(data))
+    socket.on('sendMessage', data => {
+      this.props.addMessage(data)
+
+      this.myDiv.current.scrollTop = this.myDiv.current.scrollHeight
+    })
+    socket.on('sendImgMessage', data => {
+      this.props.addMessage(data)
+      this.myDiv.current.scrollTop = this.myDiv.current.scrollHeight
+      let i = 0
+      setInterval(() => {
+        i++
+        if (i < 10) {
+          this.myDiv.current.scrollTop = this.myDiv.current.scrollHeight
+        }
+      }, 10)
+    })
   }
   getMessageList () {
     let messageList = []
@@ -44,9 +62,24 @@ class Main extends React.Component {
     })
     this.setState({ message: '' })
   }
+  sendImg = () => {}
   fnShow = () => {
     if (window.innerWidth > 560) return
     if (this.props.show) this.props.changeShow()
+  }
+  upImg = () => {
+    let file = this.myFile.current.files[0]
+    if (!file) return
+    let { userName, channelList, channelId } = this.props
+    channelId = channelList[channelId].channelId
+    let fd = new FormData()
+    fd.append('imgMessage', file)
+    fd.append('channelId', channelId)
+    fd.append('userCode', userCode)
+    fd.append('userName', userName)
+    sendImgMessage(fd).then(data => {
+      if (data.data.code === 200) this.myFile.current.value = ''
+    })
   }
   render () {
     let messageList = this.getMessageList()
@@ -72,9 +105,19 @@ class Main extends React.Component {
           >
             发送
           </Button>
+          <div className='file'>
+            <i className='img'>
+              <input
+                type='file'
+                accept='image/*'
+                onChange={this.upImg}
+                ref={this.myFile}
+              />
+            </i>
+          </div>
         </div>
 
-        <div className='message-list'>
+        <div className='message-list' ref={this.myDiv}>
           {messageList.map(item => {
             return (
               <div
@@ -88,12 +131,18 @@ class Main extends React.Component {
                   <div className='time'>
                     {dayjs(item.time).format('YYYY/M/D H:m:s')}
                   </div>
-                  <div
-                    className='text'
-                    dangerouslySetInnerHTML={{
-                      __html: item.message.replace(/(\r\n|\n|\r)/gm, '<br />')
-                    }}
-                  />
+                  {item.message ? (
+                    <div
+                      className='text'
+                      dangerouslySetInnerHTML={{
+                        __html: item.message.replace(/(\r\n|\n|\r)/gm, '<br />')
+                      }}
+                    />
+                  ) : (
+                    <div className='text'>
+                      <img alt='' src={href + item.imgMessage} />
+                    </div>
+                  )}
                 </div>
               </div>
             )

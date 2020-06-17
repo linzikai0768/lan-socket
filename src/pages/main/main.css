@@ -45,6 +45,9 @@
   background-color: #94ecec;
   border-radius: 5px;
 }
+.main .message-list .content .primary .text img {
+  max-width: 100%;
+}
 .main .message-list .oneself .userImg {
   float: right;
 }
@@ -66,8 +69,8 @@
 }
 .main .input .message {
   width: 100%;
-  margin-top: 30px;
-  height: 170px;
+  margin-top: 40px;
+  height: 160px;
 }
 .main .input .message .MuiOutlinedInput-multiline {
   height: 100%;
@@ -76,4 +79,41 @@
   position: absolute;
   bottom: 20px;
   right: 20px;
+}
+.main .input .file {
+  height: 40px;
+  width: 100%;
+  position: absolute;
+  bottom: 160px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+}
+.main .input .file .img {
+  width: 30px;
+  height: 30px;
+  overflow: hidden;
+  margin: 0 20px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  position: relative;
+}
+.main .input .file .img input {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+.main .input .file .img::after {
+  content: '+';
+  height: 30px;
+  line-height: 25px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 30px;
+  font-style: normal;
+  color: #ccc;
+  z-index: -1;
 }
