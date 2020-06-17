@@ -8,7 +8,6 @@ import ChangeName from './components/changeName'
 import { getUserForm, getChannelList, getAllMessage } from './api/axios'
 import { connect } from 'react-redux'
 import socket from './utils/socket'
-
 class App extends React.Component {
   constructor (props) {
     super(props)
@@ -17,6 +16,7 @@ class App extends React.Component {
       coercive: false
     }
   }
+
   componentDidMount () {
     socket.emit('userAccess', JSON.stringify({ userCode }))
     socket.emit('informUserAccess', data => {

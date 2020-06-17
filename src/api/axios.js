@@ -1,5 +1,4 @@
 import axios from 'axios'
-import Qs from 'qs'
 import href from '../utils/href'
 let instance = axios.create({
   baseURL: href,
@@ -16,7 +15,7 @@ export function changeName (data) {
   return instance({
     url: '/change/userName',
     method: 'post',
-    data: Qs.stringify(data)
+    data: data
   })
 }
 
@@ -25,7 +24,7 @@ export function getChannelList (data) {
   return instance({
     url: '/acquire/channel',
     method: 'post',
-    data: Qs.stringify(data)
+    data: data
   })
 }
 // 获取所在群的所有信息
@@ -33,7 +32,7 @@ export function getAllMessage (data) {
   return instance({
     url: '/acquire/allMessage',
     method: 'post',
-    data: Qs.stringify(data)
+    data: data
   })
 }
 // 创建群
@@ -41,7 +40,7 @@ export function addChannel (data) {
   return instance({
     url: '/addChannel',
     method: 'post',
-    data: Qs.stringify(data)
+    data: data
   })
 }
 // 加入群
@@ -49,13 +48,6 @@ export function joinChannel (data) {
   return instance({
     url: '/joinChannel',
     method: 'post',
-    data: Qs.stringify(data)
-  })
-}
-export function getData () {
-  return instance({
-    url: '/getData',
-    method: 'post',
-    data: { key: 123 }
+    data: data
   })
 }
